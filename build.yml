@@ -1,0 +1,9 @@
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Build and push the box using Packer.
+      shell:
+        cmd: |
+          packer build -var-file=../variables.pkrvars.hcl box.pkr.hcl
+        chdir: kalilinux
