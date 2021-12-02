@@ -99,7 +99,7 @@ build {
 
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    script          = "./scripts/setup_tools.sh"
+    script          = "./scripts/setup.sh"
   }
 
   provisioner "shell" {
@@ -110,7 +110,7 @@ build {
   post-processors {
     post-processor "vagrant" {
       compression_level = "9"
-      output            = "builds/kali-${local.kali_version}.{{isotime \"20060102\"}}-x86_64.{{.Provider}}.box"
+      output            = "builds/kali-${local.kali_version}.{{isotime \"20060102\"}}-x86-64.{{.Provider}}.box"
     }
 
     post-processor "vagrant-cloud" {
