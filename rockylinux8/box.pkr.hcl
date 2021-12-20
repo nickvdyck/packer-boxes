@@ -70,11 +70,11 @@ source "virtualbox-iso" "rockylinux8" {
   output_directory = "output-rockylinux8-vb"
 }
 
-
 source "qemu" "rockylinux8" {
   iso_url            = local.iso_url_x86_64
   iso_checksum       = local.iso_checksum_x86_64
   boot_command       = local.boot_command
+  boot_wait          = var.boot_wait
   shutdown_command   = local.shutdown_command
   accelerator        = "kvm"
   http_directory     = "http"
@@ -94,7 +94,6 @@ source "qemu" "rockylinux8" {
   net_device         = "virtio-net"
   qemu_binary        = var.qemu_binary
   vm_name            = "rocky-linux-8-5"
-  boot_wait          = var.boot_wait
   output_directory   = "output-rockylinux8-qemu"
 }
 

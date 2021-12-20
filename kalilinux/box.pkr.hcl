@@ -38,32 +38,10 @@ variable "qemu_binary" {
 }
 
 locals {
-  kali_version = "2021.3"
-}
-
-source "qemu" "kalilinux" {
-  iso_checksum       = "22995811b68817114c2f4bcab425377702882b9a2b19a62d8d8c6e85f691262b"
-  iso_url            = "https://cdimage.kali.org/kali-2021.3/kali-linux-2021.3a-installer-amd64.iso"
-  shutdown_command   = "echo 'vagrant'|sudo -S shutdown -P now"
-  accelerator        = "kvm"
-  http_directory     = "http"
-  ssh_username       = var.ssh_username
-  ssh_password       = var.ssh_password
-  ssh_timeout        = var.ssh_timeout
-  cpus               = var.cpus
-  disk_interface     = "virtio-scsi"
-  disk_size          = var.disk_size
-  disk_cache         = "unsafe"
-  disk_discard       = "unmap"
-  disk_detect_zeroes = "unmap"
-  disk_compression   = true
-  format             = "qcow2"
-  headless           = var.headless
-  memory             = var.memory
-  net_device         = "virtio-net"
-  qemu_binary        = var.qemu_binary
-  vm_name            = "kalilinux"
-  boot_wait          = var.boot_wait
+  version             = "2021.3"
+  version_suffix      = "a"
+  iso_url_x86_64      = "https://cdimage.kali.org/kali-${local.version}/kali-linux-${local.version}${local.version_suffix}-installer-amd64.iso"
+  iso_checksum_x86_64 = "22995811b68817114c2f4bcab425377702882b9a2b19a62d8d8c6e85f691262b"
   boot_command = [
     "<esc><wait>",
     "/install.amd/vmlinuz<wait>",
@@ -90,11 +68,63 @@ source "qemu" "kalilinux" {
     " -- <wait>",
     "<enter><wait>"
   ]
+  shutdown_command = "echo 'vagrant'|sudo -S shutdown -P now"
+}
+
+source "qemu" "kalilinux" {
+  iso_url            = local.iso_url_x86_64
+  iso_checksum       = local.iso_checksum_x86_64
+  boot_command       = local.boot_command
+  boot_wait          = var.boot_wait
+  shutdown_command   = local.shutdown_command
+  accelerator        = "kvm"
+  http_directory     = "http"
+  ssh_username       = var.ssh_username
+  ssh_password       = var.ssh_password
+  ssh_timeout        = var.ssh_timeout
+  cpus               = var.cpus
+  disk_interface     = "virtio-scsi"
+  disk_size          = var.disk_size
+  disk_cache         = "unsafe"
+  disk_discard       = "unmap"
+  disk_detect_zeroes = "unmap"
+  disk_compression   = true
+  format             = "qcow2"
+  headless           = var.headless
+  memory             = var.memory
+  net_device         = "virtio-net"
+  qemu_binary        = var.qemu_binary
+  vm_name            = "kalilinux"
+  output_directory   = "output-kalilinux-qemu"
+}
+
+source "virtualbox-iso" "kalilinux" {
+  iso_url              = local.iso_url_x86_64
+  iso_checksum         = local.iso_checksum_x86_64
+  boot_command         = local.boot_command
+  boot_wait            = var.boot_wait
+  cpus                 = var.cpus
+  memory               = var.memory
+  disk_size            = var.disk_size
+  headless             = var.headless
+  http_directory       = "http"
+  guest_os_type        = "Debian_64"
+  shutdown_command     = local.shutdown_command
+  ssh_username         = var.ssh_username
+  ssh_password         = var.ssh_password
+  ssh_timeout          = var.ssh_timeout
+  hard_drive_interface = "sata"
+  vboxmanage_post = [
+    ["modifyvm", "{{.Name}}", "--memory", "2048"],
+    ["modifyvm", "{{.Name}}", "--cpus", "1"]
+  ]
+  output_directory = "output-kalilinux-vb"
 }
 
 build {
   sources = [
-    "sources.qemu.kalilinux"
+    "sources.qemu.kalilinux",
+    "sources.virtualbox-iso.kalilinux"
   ]
 
   provisioner "shell" {
@@ -110,12 +140,12 @@ build {
   post-processors {
     post-processor "vagrant" {
       compression_level = "9"
-      output            = "builds/kali-${local.kali_version}.{{isotime \"20060102\"}}-x86-64.{{.Provider}}.box"
+      output            = "builds/kali-${local.version}.{{isotime \"20060102\"}}-x86-64.{{.Provider}}.box"
     }
 
-    post-processor "vagrant-cloud" {
-      box_tag = "nickvd/kalilinux"
-      version = "${local.kali_version}.{{isotime \"20060102\"}}"
-    }
+    # post-processor "vagrant-cloud" {
+    #   box_tag = "nickvd/kalilinux"
+    #   version = "${local.version}.{{isotime \"20060102\"}}"
+    # }
   }
 }
