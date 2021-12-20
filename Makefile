@@ -1,7 +1,7 @@
 .PHONY: build.kali
 build.kali:
-	# cd kalilinux && \
-	# 	env $$(cat ../.env | xargs) packer build -only="qemu.kalilinux" -var-file=../variables.pkrvars.hcl box.pkr.hcl
+	cd kalilinux && \
+		env $$(cat ../.env | xargs) packer build -only="qemu.kalilinux" -var-file=../variables.pkrvars.hcl box.pkr.hcl
 	cd kalilinux && \
 		env $$(cat ../.env | xargs) packer build -only="virtualbox-iso.kalilinux" -var-file=../variables.pkrvars.hcl box.pkr.hcl
 

@@ -38,10 +38,10 @@ variable "qemu_binary" {
 }
 
 locals {
-  version             = "2021.3"
-  version_suffix      = "a"
+  version             = "2021.4"
+  version_suffix      = ""
   iso_url_x86_64      = "https://cdimage.kali.org/kali-${local.version}/kali-linux-${local.version}${local.version_suffix}-installer-amd64.iso"
-  iso_checksum_x86_64 = "22995811b68817114c2f4bcab425377702882b9a2b19a62d8d8c6e85f691262b"
+  iso_checksum_x86_64 = "13c8ed5b87462e966c5afca129a4b76247f5b2b166733a13d154d1a1d31521d3"
   boot_command = [
     "<esc><wait>",
     "/install.amd/vmlinuz<wait>",
@@ -143,9 +143,9 @@ build {
       output            = "builds/kali-${local.version}.{{isotime \"20060102\"}}-x86-64.{{.Provider}}.box"
     }
 
-    # post-processor "vagrant-cloud" {
-    #   box_tag = "nickvd/kalilinux"
-    #   version = "${local.version}.{{isotime \"20060102\"}}"
-    # }
+    post-processor "vagrant-cloud" {
+      box_tag = "nickvd/kalilinux"
+      version = "${local.version}.{{isotime \"20060102\"}}"
+    }
   }
 }
