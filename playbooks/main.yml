@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - role: roles/rhel
+      when: ansible_os_family == 'RedHat'
+
+    - role: roles/debian
+      when: ansible_os_family == 'Debian'
+
+    - role: roles/cleanup

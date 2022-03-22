@@ -48,21 +48,23 @@ locals {
 }
 
 source "virtualbox-iso" "rockylinux8" {
-  iso_url              = local.iso_url_x86_64
-  iso_checksum         = local.iso_checksum_x86_64
-  boot_command         = local.boot_command
-  boot_wait            = var.boot_wait
-  cpus                 = var.cpus
-  memory               = var.memory
-  disk_size            = var.disk_size
-  headless             = var.headless
-  http_directory       = "http"
-  guest_os_type        = "RedHat_64"
-  shutdown_command     = local.shutdown_command
-  ssh_username         = var.ssh_username
-  ssh_password         = var.ssh_password
-  ssh_timeout          = var.ssh_timeout
-  hard_drive_interface = "sata"
+  iso_url                 = local.iso_url_x86_64
+  iso_checksum            = local.iso_checksum_x86_64
+  boot_command            = local.boot_command
+  boot_wait               = var.boot_wait
+  cpus                    = var.cpus
+  memory                  = var.memory
+  disk_size               = var.disk_size
+  headless                = var.headless
+  http_directory          = "http"
+  guest_os_type           = "RedHat_64"
+  shutdown_command        = local.shutdown_command
+  ssh_username            = var.ssh_username
+  ssh_password            = var.ssh_password
+  ssh_timeout             = var.ssh_timeout
+  guest_additions_path    = "VBoxGuestAdditions_{{.Version}}.iso"
+  virtualbox_version_file = ".vbox_version"
+  hard_drive_interface    = "sata"
   vboxmanage_post = [
     ["modifyvm", "{{.Name}}", "--memory", "2048"],
     ["modifyvm", "{{.Name}}", "--cpus", "1"]
@@ -103,9 +105,8 @@ build {
     "sources.virtualbox-iso.rockylinux8"
   ]
 
-  provisioner "shell" {
-    execute_command = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    script          = "./scripts/cleanup.sh"
+  provisioner "ansible" {
+    playbook_file = "../playbooks/main.yml"
   }
 
   post-processors {

@@ -1,0 +1,7 @@
+---
+- name: Install QEMU guest additions
+  yum:
+    name:
+      - qemu-guest-agent
+      - spice-vdagent
+    state: present
