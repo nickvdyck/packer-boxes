@@ -1,0 +1,45 @@
+---
+- name: Install guest additions
+  apt:
+    name: virtualbox-guest-x11
+    state: present
+  when: ansible_distribution == 'Kali'
+
+- name: Ensure correct kernel headers are installed.
+  shell: "apt-get -y install linux-headers-$(uname -r)"
+  tags: ["skip_ansible_lint"]
+  when: ansible_distribution != 'Kali'
+
+- name: Get VirtualBox version.
+  command: cat /home/vagrant/.vbox_version
+  changed_when: false
+  register: virtualbox_version
+
+- name: Mount VirtualBox guest additions ISO.
+  mount:
+    name: /tmp/vbox
+    src: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    opts: loop
+    state: mounted
+    fstype: iso9660
+  when: ansible_distribution != 'Kali'
+
+- name: Run VirtualBox guest additions installation.
+  shell: sh /tmp/vbox/VBoxLinuxAdditions.run
+  changed_when: true
+  failed_when: false
+  tags: ["skip_ansible_lint"]
+  when: ansible_distribution != 'Kali'
+
+- name: Unmount VirtualBox guest additions ISO.
+  mount:
+    name: /tmp/vbox
+    src: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    state: absent
+    fstype: iso9660
+  when: ansible_distribution != 'Kali'
+
+- name: Delete VirtualBox guest additions ISO.
+  file:
+    path: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    state: absent

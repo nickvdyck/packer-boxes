@@ -1,6 +1,6 @@
 # vim: ft=ini
 
 [all:vars]
-ansible_connection=ssh
+ansible_connection = ssh
 ansible_user = vagrant
 ansible_pass = vagrant

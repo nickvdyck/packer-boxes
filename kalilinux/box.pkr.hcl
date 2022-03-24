@@ -38,10 +38,10 @@ variable "qemu_binary" {
 }
 
 locals {
-  version             = "2021.4"
+  version             = "2022.1"
   version_suffix      = ""
   iso_url_x86_64      = "https://cdimage.kali.org/kali-${local.version}/kali-linux-${local.version}${local.version_suffix}-installer-amd64.iso"
-  iso_checksum_x86_64 = "13c8ed5b87462e966c5afca129a4b76247f5b2b166733a13d154d1a1d31521d3"
+  iso_checksum_x86_64 = "784e403bd58e5b05e5c24d91dc44e405fb02674bb85ee0b290e0f2ea16113a39"
   boot_command = [
     "<esc><wait>",
     "/install.amd/vmlinuz<wait>",
@@ -132,9 +132,8 @@ build {
     script          = "./scripts/setup.sh"
   }
 
-  provisioner "shell" {
-    execute_command = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    script          = "./scripts/cleanup.sh"
+  provisioner "ansible" {
+    playbook_file = "../playbooks/main.yml"
   }
 
   post-processors {

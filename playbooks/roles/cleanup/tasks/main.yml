@@ -1,4 +1,10 @@
 ---
+- name: Blank netplan machine-id (DUID) so machines get unique ID generated on boot.
+  shell: |
+    truncate -s 0 /etc/machine-id
+    rm /var/lib/dbus/machine-id
+    ln -s /etc/machine-id /var/lib/dbus/machine-id
+
 - name: Zero out the rest of the free space using dd, then delete the written file.
   shell: |
     dd if=/dev/zero of=/EMPTY bs=1M

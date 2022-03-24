@@ -1,0 +1,7 @@
+---
+- name: Install QEMU guest additions
+  apt:
+    name:
+      - qemu-guest-agent
+      - spice-vdagent
+    state: present

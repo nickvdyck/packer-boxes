@@ -1,0 +1,87 @@
+---
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+
+- name: Upgrade distro
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Reboot to make sure all upgrades are applied
+  reboot:
+    reboot_timeout: 3600
+
+# SSH daemon configuration.
+- name: Configure SSH daemon.
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^UseDNS"
+      line: "UseDNS no"
+    - regexp: "^GSSAPIAuthentication"
+      line: "GSSAPIAuthentication no"
+
+# Vagrant SSH configuration.
+- name: Configure Vagrant .ssh directory.
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0700
+
+- name: Get Vagrant's public key.
+  get_url:
+    url: https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub
+    dest: /home/vagrant/.ssh/authorized_keys
+    owner: vagrant
+    group: vagrant
+    mode: 0600
+
+# https://www.freedesktop.org/software/systemd/man/systemd-detect-virt.html
+- name: Detect virtualization environment
+  shell: systemd-detect-virt
+  register: vm_id
+
+- include_tasks: virtualbox.yml
+  when: vm_id.stdout == 'oracle'
+
+- include_tasks: kvm.yml
+  when: vm_id.stdout == 'kvm' or vm_id.stdout == 'qemu'
+
+# Cleanup tasks.
+- name: Remove unneeded packages.
+  apt:
+    name:
+      - ppp
+      - pppconfig
+      - pppoeconf
+      - cpp
+      - gcc
+      - g++
+      - libx11-data
+      - xauth
+      - libxmuu1
+      - libxcb1
+      - libx11-6
+      - libxext6
+      - linux-source
+    state: absent
+
+- name: Remove unneeded packages (by regex).
+  shell: "apt-get -y remove '.*-dev$'"
+  tags: ["skip_ansible_lint"]
+
+- name: Clean up apt.
+  command: "{{ item }}"
+  changed_when: false
+  with_items:
+    - apt-get -y autoremove
+    - apt-get -y clean
