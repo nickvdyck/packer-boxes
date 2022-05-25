@@ -107,6 +107,11 @@ build {
 
   provisioner "ansible" {
     playbook_file = "../playbooks/main.yml"
+
+    # Required due to: https://github.com/hashicorp/packer-plugin-ansible/issues/69
+    ansible_ssh_extra_args = [
+      "-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=+ssh-rsa"
+    ]
   }
 
   post-processors {
