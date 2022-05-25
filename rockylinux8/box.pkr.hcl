@@ -38,9 +38,9 @@ variable "qemu_binary" {
 }
 
 locals {
-  version             = "8.5"
+  version             = "8.6"
   iso_url_x86_64      = "https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-${local.version}-x86_64-minimal.iso"
-  iso_checksum_x86_64 = "4eb2ae6b06876205f2209e4504110fe4115b37540c21ecfbbc0ebc11084cb779"
+  iso_checksum_x86_64 = "a9ece0e810275e881abfd66bb0e59ac05d567a5ec0bc2f108b9a3e90bef5bf94"
   boot_command = [
     "<tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
   ]
@@ -95,7 +95,7 @@ source "qemu" "rockylinux8" {
   memory             = var.memory
   net_device         = "virtio-net"
   qemu_binary        = var.qemu_binary
-  vm_name            = "rocky-linux-8-5"
+  vm_name            = "rockylinux-${replace(local.version, ".", "-")}"
   output_directory   = "output-rockylinux8-qemu"
 }
 
