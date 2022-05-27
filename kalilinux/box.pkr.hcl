@@ -38,10 +38,10 @@ variable "qemu_binary" {
 }
 
 locals {
-  version             = "2022.1"
+  version             = "2022.2"
   version_suffix      = ""
   iso_url_x86_64      = "https://cdimage.kali.org/kali-${local.version}/kali-linux-${local.version}${local.version_suffix}-installer-amd64.iso"
-  iso_checksum_x86_64 = "784e403bd58e5b05e5c24d91dc44e405fb02674bb85ee0b290e0f2ea16113a39"
+  iso_checksum_x86_64 = "fa28a2cd45f43e654db0aaf4856f505fd721de44bc3c4b7e8e823919899156e0"
   boot_command = [
     "<esc><wait>",
     "/install.amd/vmlinuz<wait>",
