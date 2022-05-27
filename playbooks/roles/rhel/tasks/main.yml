@@ -4,13 +4,8 @@
   changed_when: false
   register: kernel_release
 
-- name: Set the appropriate libselinux package for RHEL 8.
-  set_fact:
-    packer_rhel_libselinux_package: python3-libselinux
-  when: ansible_distribution_major_version == '8'
-
 - name: Ensure necessary packages are installed.
-  yum:
+  dnf:
     name:
       - wget
       - perl
@@ -21,7 +16,7 @@
       - kernel-headers
       - kernel-devel
       - "kernel-devel-{{ kernel_release.stdout }}"
-      - "{{ packer_rhel_libselinux_package }}"
+      - python3-libselinux
       - elfutils-libelf-devel
       - cifs-utils
     state: present
@@ -81,16 +76,19 @@
 
 # Cleanup tasks.
 - name: Remove unneeded packages.
-  yum:
+  dnf:
     name:
       - cpp
       - kernel-devel
       - kernel-headers
     state: absent
 
-- name: Clean up yum.
-  command: >
-    yum clean all
+- name: Remove old kernels
+  shell: dnf remove -y $(dnf repoquery --installonly --latest-limit=-1 -q)
+
+- name: Delete DNF cache
+  command: |
+    dnf clean all
     warn=false
   changed_when: true
 

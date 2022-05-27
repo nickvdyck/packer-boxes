@@ -1,6 +1,6 @@
 ---
 - name: Install QEMU guest additions
-  yum:
+  dnf:
     name:
       - qemu-guest-agent
       - spice-vdagent
