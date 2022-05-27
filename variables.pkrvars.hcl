@@ -8,5 +8,3 @@ disk_size = 50000
 
 headless  = true
 boot_wait = "10s"
-
-qemu_binary = ""
