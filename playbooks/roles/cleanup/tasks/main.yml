@@ -51,6 +51,7 @@
     - /var/log/messages
     - /var/log/secure
     - /var/log/spooler
+  ignore_errors: true
 
 - name: Remove log folders.
   file:
@@ -116,6 +117,6 @@
 
 - name: Sync disc
   command: sync
-
-- name: Clear shell history
-  shell: history -c
+# TODO: Disabled for now, doesn't work on kali
+# - name: Clear shell history
+#   shell: history -c
