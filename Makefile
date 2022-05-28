@@ -14,7 +14,6 @@ build.rocky:
 
 .PHONY: build.almalinux9
 build.almalinux9:
-	# Doesn't work at the moment, throws a kernel panic
 	cd almalinux && \
 		env $$(cat ../.env | xargs) packer build -only="qemu.almalinux" -var-file=../variables.pkrvars.hcl -var-file=../vars/almalinux9.pkrvars.hcl box.pkr.hcl
 	cd almalinux && \
@@ -30,4 +29,5 @@ build.almalinux8:
 .PHONY: build
 build:
 	$(MAKE) build.kali
-	$(MAKE) build.rocky
+	$(MAKE) build.almalinux8
+	$(MAKE) build.almalinux9

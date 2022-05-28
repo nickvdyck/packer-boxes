@@ -141,9 +141,9 @@ build {
       output            = "builds/${local.name}-{{isotime \"20060102\"}}-x86-64.{{.Provider}}.box"
     }
 
-    # post-processor "vagrant-cloud" {
-    #   box_tag = "nickvd/${local.name_short}"
-    #   version = "${local.version}.{{isotime \"20060102\"}}"
-    # }
+    post-processor "vagrant-cloud" {
+      box_tag = "nickvd/${local.name_short}"
+      version = "${var.version}.{{isotime \"20060102\"}}"
+    }
   }
 }

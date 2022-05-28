@@ -32,11 +32,6 @@ variable "boot_wait" {
   type = string
 }
 
-variable "qemu_binary" {
-  type    = string
-  default = ""
-}
-
 locals {
   version             = "2022.2"
   version_suffix      = ""
@@ -93,7 +88,7 @@ source "qemu" "kalilinux" {
   headless           = var.headless
   memory             = var.memory
   net_device         = "virtio-net"
-  qemu_binary        = var.qemu_binary
+  qemu_binary        = ""
   vm_name            = "kalilinux"
   output_directory   = "output-kalilinux-qemu"
 }
