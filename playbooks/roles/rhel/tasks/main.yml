@@ -19,6 +19,10 @@
       - python3-libselinux
       - elfutils-libelf-devel
       - cifs-utils
+
+      # Install en language packs: To prevent `“Failed to set locale, defaulting to C.UTF-8"`
+      - langpacks-en
+      - glibc-langpack-en
     state: present
 
 # Fix slow DNS.
