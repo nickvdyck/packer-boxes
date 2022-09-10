@@ -5,9 +5,10 @@
     state: present
   when: ansible_distribution == 'Kali'
 
-- name: Ensure correct kernel headers are installed.
-  shell: "apt-get -y install linux-headers-$(uname -r)"
-  tags: ["skip_ansible_lint"]
+- name: Ensure kernel headers are installed.
+  apt:
+    name:
+      - "linux-headers-{{ ansible_kernel }}"
   when: ansible_distribution != 'Kali'
 
 - name: Get VirtualBox version.
@@ -38,6 +39,11 @@
     state: absent
     fstype: iso9660
   when: ansible_distribution != 'Kali'
+
+- name: Delete VirtualBox guest additions ISO.
+  file:
+    path: "/home/vagrant/VBoxGuestAdditions.iso"
+    state: absent
 
 - name: Delete VirtualBox guest additions ISO.
   file:

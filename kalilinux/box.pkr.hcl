@@ -108,6 +108,7 @@ source "virtualbox-iso" "kalilinux" {
   ssh_username         = var.ssh_username
   ssh_password         = var.ssh_password
   ssh_timeout          = var.ssh_timeout
+  guest_additions_path = "VBoxGuestAdditions_{{.Version}}.iso"
   hard_drive_interface = "sata"
   vboxmanage_post = [
     ["modifyvm", "{{.Name}}", "--memory", "2048"],

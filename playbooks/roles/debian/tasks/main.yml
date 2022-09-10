@@ -11,9 +11,9 @@
     upgrade: dist
     force_apt_get: yes
 
-- name: Reboot to make sure all upgrades are applied
-  reboot:
-    reboot_timeout: 3600
+# - name: Reboot to make sure all upgrades are applied
+#   reboot:
+#     reboot_timeout: 3600
 
 # SSH daemon configuration.
 - name: Configure SSH daemon.

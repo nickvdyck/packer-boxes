@@ -2,3 +2,4 @@ builds
 .env
 .vagrant
 output-*
+.vscode
