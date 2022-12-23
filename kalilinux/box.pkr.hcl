@@ -33,10 +33,10 @@ variable "boot_wait" {
 }
 
 locals {
-  version             = "2022.2"
+  version             = "2022.4"
   version_suffix      = ""
   iso_url_x86_64      = "https://cdimage.kali.org/kali-${local.version}/kali-linux-${local.version}${local.version_suffix}-installer-amd64.iso"
-  iso_checksum_x86_64 = "fa28a2cd45f43e654db0aaf4856f505fd721de44bc3c4b7e8e823919899156e0"
+  iso_checksum_x86_64 = "aeb29db6cf1c049cd593351fd5c289c8e01de7e21771070853597dfc23aada28"
   boot_command = [
     "<esc><wait>",
     "/install.amd/vmlinuz<wait>",
